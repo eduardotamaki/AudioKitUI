@@ -175,8 +175,7 @@ public class MIDITrackView: UIView {
         if previousTempo != sequencer.tempo {
             previousTempo = sequencer.tempo
             cursorTimer.invalidate()
-            cursorTimer = Timer.scheduledTimer(timeInterval: (1.0 / ((20 + (8.0 / 10.0) + (1.0 / 30.0)))) *
-                                                (1.0 / sequencer.tempo) * 60.0,
+            cursorTimer = Timer.scheduledTimer(timeInterval: 1.0,
             target: self,
             selector: #selector(self.updateCursor),
             userInfo: nil,
@@ -190,8 +189,7 @@ public class MIDITrackView: UIView {
         } else {
             playbackCursorView.removeFromSuperview()
             cursorTimer.invalidate()
-            scrollTimer = Timer.scheduledTimer(timeInterval: (1.0 / ((20 + (8.0 / 10.0) + (1.0 / 30.0)))) *
-                                                (1.0 / sequencer.tempo) * 60.0,
+            scrollTimer = Timer.scheduledTimer(timeInterval: 1.0,
             target: self,
             selector: #selector(self.scrollNotes),
             userInfo: nil,
@@ -207,8 +205,7 @@ public class MIDITrackView: UIView {
         if previousTempo != sequencer.tempo {
             previousTempo = sequencer.tempo
             scrollTimer.invalidate()
-            scrollTimer = Timer.scheduledTimer(timeInterval: (1.0 / ((20 + (8.0 / 10.0) + (1.0 / 30.0)))) *
-                                                (1.0 / sequencer.tempo) * 60.0,
+            scrollTimer = Timer.scheduledTimer(timeInterval: 1.0,
             target: self,
             selector: #selector(self.scrollNotes),
             userInfo: nil,
