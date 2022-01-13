@@ -60,7 +60,12 @@ public class MIDITrackView: UIView {
 
     /// How far the view is zoomed in
     public var noteZoomConstant: Double = 10_000.0
-
+    
+    private var timerMultiplier: Double {
+      let base = (20 + (8.0 / 10.0) + (1.0 / 30.0))
+      let inverse = 1.0 / base
+      return inverse * 60
+    }
     /// Initialize the Track View
     public convenience init(frame: CGRect, midiFile: URL!,
                             trackNumber: Int,
@@ -88,27 +93,26 @@ public class MIDITrackView: UIView {
 
     /// Cursor which displays for the first few seconds of the midi clip until it goes out of bounds
     public func play() {
-        playbackCursorRect = CGRect(x: 0, y: 0, width: 3, height: Double(self.frame.height))
-        playbackCursorView = UIView(frame: playbackCursorRect)
-        playbackCursorView.backgroundColor = .white
-        collectiveNoteView.addSubview(self.playbackCursorView)
-        if self.sequencer.allTempoEvents.count == 1 {
-            sequencer.setTempo(self.sequencer.allTempoEvents[0].1)
-            previousTempo = self.sequencer.allTempoEvents[0].1
-            let tempo = self.sequencer.allTempoEvents[0].1
-            cursorTimer = Timer.scheduledTimer(timeInterval: (1.0 / ((20 + (8.0 / 10.0) + (1.0 / 30.0)))) *
-                                               (1.0 / tempo) * 60.0,
-            target: self,
-            selector: #selector(self.updateCursor),
-            userInfo: nil,
-            repeats: true)
-        } else {
-            cursorTimer = Timer.scheduledTimer(timeInterval:(28.8/ sequencer.tempo)),
-            target: self,
-            selector: #selector(self.updateCursor),
-            userInfo: nil,
-            repeats: true)
-        }
+      playbackCursorRect = CGRect(x: 0, y: 0, width: 3, height: Double(self.frame.height))
+      playbackCursorView = UIView(frame: playbackCursorRect)
+      playbackCursorView.backgroundColor = .white
+      collectiveNoteView.addSubview(self.playbackCursorView)
+      if self.sequencer.allTempoEvents.count == 1 {
+        sequencer.setTempo(self.sequencer.allTempoEvents[0].1)
+        previousTempo = self.sequencer.allTempoEvents[0].1
+        let tempo = self.sequencer.allTempoEvents[0].1
+        cursorTimer = Timer.scheduledTimer(timeInterval: timerMultiplier * (1.0 / tempo),
+                                           target: self,
+                                           selector: #selector(self.updateCursor),
+                                           userInfo: nil,
+                                           repeats: true)
+      } else {
+        cursorTimer = Timer.scheduledTimer(timeInterval: timerMultiplier * (1.0 / sequencer.tempo),
+                                           target: self,
+                                           selector: #selector(self.updateCursor),
+                                           userInfo: nil,
+                                           repeats: true)
+      }
     }
 
     /// Stop
