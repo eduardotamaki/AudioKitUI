@@ -103,8 +103,7 @@ public class MIDITrackView: UIView {
             userInfo: nil,
             repeats: true)
         } else {
-            cursorTimer = Timer.scheduledTimer(
-            timeInterval:(28.8/ sequencer.tempo),
+            cursorTimer = Timer.scheduledTimer(timeInterval:(28.8/ sequencer.tempo)),
             target: self,
             selector: #selector(self.updateCursor),
             userInfo: nil,
